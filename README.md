@@ -1,1 +1,1 @@
-# project-grocery
+# grocery-comparer
