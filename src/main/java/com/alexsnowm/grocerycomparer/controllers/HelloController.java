@@ -1,15 +1,16 @@
 package com.alexsnowm.grocerycomparer.controllers;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class HelloController {
 
     @RequestMapping(value = "")
-    @ResponseBody
-    public String index() {
-        return "Hello World";
+    public String index(Model model) {
+        model.addAttribute("title", "Hello World");
+
+        return "index";
     }
 }
