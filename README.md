@@ -1,1 +1,2 @@
-# grocery-comparer
+# Grocery Comparer
+### Description
