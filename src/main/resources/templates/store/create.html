@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org/">
+<head th:replace="fragments :: head">
+</head>
+<body class="container">
+
+<nav th:replace="fragments :: navigation"></nav>
+<h1 th:text="${title}"></h1>
+
+<form method="post" style="max-width:600px;" th:object="${store}">
+    <div class="form-group">
+        <label th:for="name">*Store Name:</label>
+        <input class="form-control" th:field="*{name}" />
+        <span th:errors="*{name}" class="error"></span>
+    </div>
+    <div class="form-group">
+        <label th:for="street">Street:</label>
+        <input class="form-control" th:field="*{street}" />
+    </div>
+    <div class="form-group">
+        <label th:for="city">City:</label>
+        <input class="form-control" th:field="*{city}" />
+    </div>
+    <div class="form-group">
+        <label th:for="state">State</label>
+        <select name="stateId">
+            <option th:each="state : ${states}"
+                    th:text="${state.name}"
+                    th:value="${state.id}"></option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label th:for="zipcode">Postal Code:</label>
+        <input class="form-control" th:field="*{zipcode}" />
+    </div>
+    <div class="form-group">
+        <label th:for="tel">Phone:</label>
+        <input class="form-control" th:field="*{tel}" />
+    </div>
+    <div class="form-group">
+        <label th:for="website">Website:</label>
+        <input class="form-control" th:field="*{website}" />
+    </div>
+    <div class="form-group">
+        <label th:for="notes">Notes:</label>
+        <input class="form-control" th:field="*{notes}" />
+    </div>
+
+    <div>
+        *Required fields
+    </div>
+
+    <input type="submit" value="Create Store" />
+</form>
+
+</body>
+</html>
