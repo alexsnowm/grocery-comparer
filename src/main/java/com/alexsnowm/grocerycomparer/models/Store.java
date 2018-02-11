@@ -1,11 +1,10 @@
 package com.alexsnowm.grocerycomparer.models;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Store {
@@ -28,6 +27,9 @@ public class Store {
     private String tel;
     private String website;
     private String notes;
+
+    @ManyToMany
+    private List<Item> items = new ArrayList<>();
 
     public Store(String name, String street, String city, String zipcode, String tel, String website, String notes) {
         this.name = name;
@@ -109,5 +111,13 @@ public class Store {
 
     public void setNotes(String notes) {
         this.notes = notes;
+    }
+
+    public List<Item> getItems() {
+        return items;
+    }
+
+    public void addItem(Item item) {
+        items.add(item);
     }
 }
