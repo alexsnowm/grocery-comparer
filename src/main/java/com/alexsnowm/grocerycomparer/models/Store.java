@@ -1,5 +1,7 @@
 package com.alexsnowm.grocerycomparer.models;
 
+import org.hibernate.validator.constraints.NotBlank;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -13,14 +15,14 @@ public class Store {
     @GeneratedValue
     private int id;
 
-    @NotNull
-    @Size(min = 1, message = "Name required")
+    @NotBlank(message = "Name required")
     private String name;
 
     private String street;
     private String city;
 
     @ManyToOne
+    @JoinColumn(name = "state_id")
     private State state;
 
     private String zipcode;

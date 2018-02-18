@@ -1,10 +1,11 @@
 package com.alexsnowm.grocerycomparer.models;
 
+import org.hibernate.validator.constraints.NotBlank;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
-import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,7 +16,7 @@ public class ItemMeasure {
     @GeneratedValue
     private int id;
 
-    @NotNull
+    @NotBlank
     private String measure;
 
     @ManyToMany

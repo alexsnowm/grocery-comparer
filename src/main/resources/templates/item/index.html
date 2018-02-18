@@ -10,19 +10,20 @@
 <table class="table">
 
     <tr>
-        <th>Store</th>
-        <th>Address</th>
-        <th>Phone</th>
+        <th>Item</th>
+        <th>Best Price</th>
+        <th>From</th>
         <th>Notes</th>
     </tr>
 
-    <tr th:each="store : ${stores}">
-        <td><a th:text="${store.name}" th:href="@{/}"></a></td>
+    <tr th:each="item : ${items}">
+        <td><a th:text="${item.name}" th:href="@{/}"></a></td>
         <td>
-            <span th:text="${store.street.isEmpty()} ? '' : ${store.street}"></span><span th:text="!${store.street.isEmpty()} and (!${store.city.isEmpty()} or !${store.state.name == ''}) ? ', '"></span><span th:text="${store.city.isEmpty()} ? '' : ${store.city}"></span><span th:text="!${store.city.isEmpty()} and !${store.state.name == ''} ? ', '"></span><span th:text="${store.state.name == ''} ? '' : ${store.state.name}"></span><span th:text="${store.zipcode.isEmpty()} ? '' : | ${store.zipcode}|"></span>
+            <span th:text="${item.street.isEmpty()} ? '' : ${item.street}"></span><span th:text="!${item.street.isEmpty()} and (!${item.city.isEmpty()} or !${item.state.name == ''}) ? ', '"></span><span th:text="${item.city.isEmpty()} ? '' : ${item.city}"></span><span th:text="!${item.city.isEmpty()} and !${item.state.name == ''} ? ', '"></span><span th:text="${item.state.name == ''} ? '' : ${item.state.name}"></span><span th:text="${item.zipcode.isEmpty()} ? '' : | ${item.zipcode}|"></span>
         </td>
-        <td th:text="${store.tel}"></td>
-        <td th:text="${store.notes.isEmpty()} ? 'N' : 'Y'"></td>
+        <!-- TODO - Display matching store for Best Price from Item's List of Stores -->
+        <td th:text="${item.tel}"></td>
+        <td th:text="${item.notes.isEmpty()} ? 'N' : 'Y'"></td>
     </tr>
 
 </table>

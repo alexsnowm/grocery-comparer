@@ -1,8 +1,8 @@
 package com.alexsnowm.grocerycomparer.controllers;
 
-import com.alexsnowm.grocerycomparer.models.State;
-import com.alexsnowm.grocerycomparer.models.Store;
-import com.alexsnowm.grocerycomparer.models.data.StateDao;
+import com.alexsnowm.grocerycomparer.models.Item;
+import com.alexsnowm.grocerycomparer.models.data.ItemDao;
+import com.alexsnowm.grocerycomparer.models.data.ItemMeasureDao;
 import com.alexsnowm.grocerycomparer.models.data.StoreDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,43 +16,46 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.validation.Valid;
 
 @Controller
-@RequestMapping(value = "stores")
+@RequestMapping(value = "items")
 public class ItemController {
 
     @Autowired
     private StoreDao storeDao;
 
     @Autowired
-    private StateDao stateDao;
+    private ItemDao itemDao;
+
+    @Autowired
+    private ItemMeasureDao itemMeasureDao;
 
     @RequestMapping(value = "")
     public String index(Model model) {
-        model.addAttribute("title", "All Stores");
-        model.addAttribute("stores", storeDao.findAll());
+        model.addAttribute("title", "All Items");
+        model.addAttribute("items", itemDao.findAll());
 
-        return "store/index";
+        return "item/index";
     }
 
     @RequestMapping(value = "create", method = RequestMethod.GET)
     public String displayCreateStoreForm(Model model) {
-        model.addAttribute("title", "Create Store");
-        model.addAttribute(new Store());
-        model.addAttribute("states", stateDao.findAll());
+        model.addAttribute("title", "Create Item");
+        model.addAttribute(new Item());
+        model.addAttribute("states", storeDao.findAll());
 
-        return "store/create";
+        return "item/create";
     }
 
     @RequestMapping(value = "create", method = RequestMethod.POST)
-    public String processCreateStoreForm(@ModelAttribute @Valid Store newStore, Errors errors, @RequestParam int stateId, Model model) {
+    public String processCreateStoreForm(@ModelAttribute @Valid Item item, Errors errors, @RequestParam int storeid, Model model) {
         if (errors.hasErrors()) {
-            model.addAttribute("title", "Create Store");
-            model.addAttribute("states", stateDao.findAll());
+            model.addAttribute("title", "Create Item");
+            model.addAttribute("stores", storeDao.findAll());
 
-            return "store/create";
+            return "item/create";
         }
-        State st = stateDao.findOne(stateId);
-        newStore.setState(st);
-        storeDao.save(newStore);
+//        Store st = storeDao.findOne(storeid);
+//        item.setStores(st);
+        itemDao.save(item);
 
         return "redirect:";
     }
