@@ -16,15 +16,19 @@
         <th>Notes</th>
     </tr>
 
-    <tr th:each="item : ${items}">
-        <td><a th:text="${item.name}" th:href="@{/}"></a></td>
-        <td>
-            <span th:text="${item.street.isEmpty()} ? '' : ${item.street}"></span><span th:text="!${item.street.isEmpty()} and (!${item.city.isEmpty()} or !${item.state.name == ''}) ? ', '"></span><span th:text="${item.city.isEmpty()} ? '' : ${item.city}"></span><span th:text="!${item.city.isEmpty()} and !${item.state.name == ''} ? ', '"></span><span th:text="${item.state.name == ''} ? '' : ${item.state.name}"></span><span th:text="${item.zipcode.isEmpty()} ? '' : | ${item.zipcode}|"></span>
-        </td>
-        <!-- TODO - Display matching store for Best Price from Item's List of Stores -->
-        <td th:text="${item.tel}"></td>
-        <td th:text="${item.notes.isEmpty()} ? 'N' : 'Y'"></td>
+    <tr th:each="dispItem,iterStat : ${dispItems}">
+        <td><a th:text="${dispItem.name}" th:href="@{/}"></a></td>
+        <td th:text="${bestPrices[iterStat.index].dispPrice}"></td>
+        <td th:text="${bestPrices[iterStat.index].store.street}"></td>
+        <td th:text="${dispItem.notes.isEmpty()} ? 'N' : 'Y'"></td>
     </tr>
+
+    <!--<tr th:each="dispItem : ${dispItems}">-->
+    <!--<td><a th:text="${dispItem.item.name}" th:href="@{/}"></a></td>-->
+    <!--<td th:text="${dispItem.price.dispPrice}"></td>-->
+    <!--<td ></td>-->
+    <!--<td th:text="${dispItem.item.notes.isEmpty()} ? 'N' : 'Y'"></td>-->
+    <!--</tr>-->
 
 </table>
 

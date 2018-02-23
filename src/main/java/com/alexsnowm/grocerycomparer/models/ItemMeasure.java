@@ -2,10 +2,7 @@ package com.alexsnowm.grocerycomparer.models;
 
 import org.hibernate.validator.constraints.NotBlank;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,8 +16,9 @@ public class ItemMeasure {
     @NotBlank
     private String measure;
 
-    @ManyToMany
-    private List<Item> items = new ArrayList<>();
+    @OneToMany
+    @JoinColumn(name = "measure_id")
+    private List<Price> prices = new ArrayList<>();
 
     public ItemMeasure() {}
 
@@ -40,11 +38,11 @@ public class ItemMeasure {
         this.measure = measure;
     }
 
-    public List<Item> getItems() {
-        return items;
+    public List<Price> getPrices() {
+        return prices;
     }
 
-    public void addItem(Item item) {
-        items.add(item);
+    public void addPrice(Price price) {
+        prices.add(price);
     }
 }

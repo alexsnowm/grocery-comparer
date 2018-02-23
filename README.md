@@ -1,6 +1,6 @@
 # Grocery Comparer
 ### Description
-A web app that tells you where the cheapest groceries are. Users enter in items - like Ziploc gallon bags - they want to keep a record for, and add prices from different stores for an item as well as the unit of measure - such as a pack of 40 bags - those prices are for. The app can then show the lowest price per unit and what store offers that.
+A web app that tells you where the cheapest groceries are. Users enter in items - like Ziploc gallon bags - they want to keep a record for, and add prices from different stores for an item as well as the unit of measure - such as a pack of 40 bags - those prices are for. The app can then show the lowest number per unit and what store offers that.
 
 ### Languages and Technologies
 This project is written in Java and uses the Spring MVC framework, Hibernate for ORM, and Thymeleaf for templating. MySQL is used for the database, and Gradle is used to build the app.

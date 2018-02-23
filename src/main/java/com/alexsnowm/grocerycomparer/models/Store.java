@@ -3,8 +3,6 @@ package com.alexsnowm.grocerycomparer.models;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,18 +20,19 @@ public class Store {
     private String city;
 
     @ManyToOne
-    @JoinColumn(name = "state_id")
     private State state;
 
     private String zipcode;
     private String tel;
     private String website;
     private String notes;
+    private String address;
 
-    @ManyToMany
-    private List<Item> items = new ArrayList<>();
+    @OneToMany
+    @JoinColumn(name = "store_id")
+    private List<Price> prices = new ArrayList<>();
 
-    public Store(String name, String street, String city, String zipcode, String tel, String website, String notes) {
+    public Store(String name, String street, String city, String zipcode, String tel, String website, String notes, String address) {
         this.name = name;
         this.street = street;
         this.city = city;
@@ -41,6 +40,7 @@ public class Store {
         this.tel = tel;
         this.website = website;
         this.notes = notes;
+        this.address = address;
     }
 
     public Store() {
@@ -115,11 +115,19 @@ public class Store {
         this.notes = notes;
     }
 
-    public List<Item> getItems() {
-        return items;
+    public String getAddress() {
+        return address;
     }
 
-    public void addItem(Item item) {
-        items.add(item);
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public List<Price> getPrices() {
+        return prices;
+    }
+
+    public void addPrice(Price price) {
+        prices.add(price);
     }
 }

@@ -2,10 +2,7 @@ package com.alexsnowm.grocerycomparer.models;
 
 import org.hibernate.validator.constraints.NotBlank;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +19,7 @@ public class State {
     private String name;
 
     @OneToMany
+    @JoinColumn(name = "state_id")
     private List<Store> stores = new ArrayList<>();
 
     public State() {}
@@ -44,5 +42,9 @@ public class State {
 
     public List<Store> getStores() {
         return stores;
+    }
+
+    public void addStore(Store store) {
+        stores.add(store);
     }
 }
