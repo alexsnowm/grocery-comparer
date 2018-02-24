@@ -27,7 +27,7 @@
         <label th:for="store">Offering Store:</label>
         <select name="storeId">
             <option th:each="store : ${stores}"
-                    th:text="|${store.name}, ${store.street}|"
+                    th:text="|${store.name} - ${store.address}|"
                     th:value="${store.id}"></option>
         </select>
     </div>

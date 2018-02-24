@@ -18,9 +18,10 @@
 
     <tr th:each="store : ${stores}">
         <td><a th:text="${store.name}" th:href="@{/}"></a></td>
-        <td>
-            <span th:text="${store.street.isEmpty()} ? '' : ${store.street}"></span><span th:text="!${store.street.isEmpty()} and (!${store.city.isEmpty()} or !${store.state.name == ''}) ? ', '"></span><span th:text="${store.city.isEmpty()} ? '' : ${store.city}"></span><span th:text="!${store.city.isEmpty()} and !${store.state.name == ''} ? ', '"></span><span th:text="${store.state.name == ''} ? '' : ${store.state.name}"></span><span th:text="${store.zipcode.isEmpty()} ? '' : | ${store.zipcode}|"></span>
-        </td>
+        <!--<td>-->
+            <!--<span th:text="${store.street.isEmpty()} ? '' : ${store.street}"></span><span th:text="!${store.street.isEmpty()} and (!${store.city.isEmpty()} or !${store.state.name == ''}) ? ', '"></span><span th:text="${store.city.isEmpty()} ? '' : ${store.city}"></span><span th:text="!${store.city.isEmpty()} and !${store.state.name == ''} ? ', '"></span><span th:text="${store.state.name == ''} ? '' : ${store.state.name}"></span><span th:text="${store.zipcode.isEmpty()} ? '' : | ${store.zipcode}|"></span>-->
+        <!--</td>-->
+        <td th:text="${store.address}"></td>
         <td th:text="${store.tel}"></td>
         <td th:text="${store.notes.isEmpty()} ? 'N' : 'Y'"></td>
     </tr>

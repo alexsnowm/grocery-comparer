@@ -44,14 +44,44 @@ public class StoreController {
 
     @RequestMapping(value = "create", method = RequestMethod.POST)
     public String processCreateStoreForm(@ModelAttribute @Valid Store newStore, Errors errors, @RequestParam int stateId, Model model) {
+
         if (errors.hasErrors()) {
             model.addAttribute("title", "Create Store");
             model.addAttribute("states", stateDao.findAll());
 
             return "store/create";
         }
+
         State st = stateDao.findOne(stateId);
         newStore.setState(st);
+
+        String addressStr = "";
+        boolean streetFill = ! newStore.getStreet().isEmpty();
+        boolean cityFill = ! newStore.getCity().isEmpty();
+        boolean stateFill = ! newStore.getState().getName().isEmpty();
+        boolean zipcodeFill = ! newStore.getZipcode().isEmpty();
+        if (streetFill) {
+            addressStr += newStore.getStreet();
+            if (cityFill || stateFill || zipcodeFill) {
+                addressStr += ", ";
+            }
+        } if (cityFill) {
+            addressStr += newStore.getCity();
+            if (stateFill) {
+                addressStr += ", ";
+            } else if (zipcodeFill) {
+                addressStr += " ";
+            }
+        } if (stateFill) {
+            addressStr += newStore.getState().getName();
+            if (zipcodeFill) {
+                addressStr += " ";
+            }
+        } if (zipcodeFill) {
+            addressStr += newStore.getZipcode();
+        }
+        newStore.setAddress(addressStr);
+
         storeDao.save(newStore);
 
         return "redirect:";

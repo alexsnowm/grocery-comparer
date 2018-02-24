@@ -19,7 +19,7 @@
     <tr th:each="dispItem,iterStat : ${dispItems}">
         <td><a th:text="${dispItem.name}" th:href="@{/}"></a></td>
         <td th:text="${bestPrices[iterStat.index].dispPrice}"></td>
-        <td th:text="${bestPrices[iterStat.index].store.street}"></td>
+        <td th:text="${bestPrices[iterStat.index].store.address}"></td>
         <td th:text="${dispItem.notes.isEmpty()} ? 'N' : 'Y'"></td>
     </tr>
 
