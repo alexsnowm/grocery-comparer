@@ -65,6 +65,7 @@ public class ItemController {
     public String viewMenu(@PathVariable int id, Model model) {
 
         Item item = itemDao.findOne(id);
+        List<Price> priceList = item.getPrices();
 
         int matchPriceId = item.getPriceId();
         DisplayItemObj iObj;
@@ -77,6 +78,7 @@ public class ItemController {
 
         model.addAttribute("title", item.getName());
         model.addAttribute("dispItem", iObj);
+        model.addAttribute("priceList", priceList);
 
         return "item/view";
     }

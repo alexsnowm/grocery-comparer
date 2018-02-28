@@ -8,7 +8,6 @@
 <h1 th:text="${title}"></h1>
 
 <table class="table">
-
     <tr>
         <td>Current Best Price:</td>
         <td th:text="${dispItem.price.dispPrice}"></td>
@@ -30,11 +29,25 @@
         <td>Notes:</td>
         <td th:text="${dispItem.item.notes}"></td>
     </tr>
-
 </table>
 
 <h3>Price History</h3>
-<table>
+<table class="table">
+
+    <tr>
+        <th>Date Added</th>
+        <th>Price</th>
+        <th>From</th>
+    </tr>
+
+    <tr th:each="price : ${priceList}">
+        <td th:text="${price.postedAt}"></td>
+        <td th:text="${price.dispPrice}"></td>
+        <td>
+            <div><a th:text="${price.store.name}" th:href="@{/stores}"></a></div>
+            <div th:text="${price.store.address}"></div>
+        </td>
+    </tr>
 
 </table>
 
