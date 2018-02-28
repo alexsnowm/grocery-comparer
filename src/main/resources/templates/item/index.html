@@ -16,19 +16,12 @@
         <th>Notes</th>
     </tr>
 
-    <tr th:each="dispItem,iterStat : ${dispItems}">
-        <td><a th:text="${dispItem.name}" th:href="@{/}"></a></td>
-        <td th:text="${bestPrices[iterStat.index].dispPrice}"></td>
-        <td th:text="${bestPrices[iterStat.index].store.address}"></td>
-        <td th:text="${dispItem.notes.isEmpty()} ? 'N' : 'Y'"></td>
+    <tr th:each="dispItem : ${dispItems}">
+        <td><a th:text="${dispItem.item.name}" th:href="'/items/view/' + ${dispItem.item.id}"></a></td>
+        <td th:text="${dispItem.price.dispPrice}"></td>
+        <td ></td>
+        <td th:text="${dispItem.item.notes.isEmpty()} ? 'N' : 'Y'"></td>
     </tr>
-
-    <!--<tr th:each="dispItem : ${dispItems}">-->
-    <!--<td><a th:text="${dispItem.item.name}" th:href="@{/}"></a></td>-->
-    <!--<td th:text="${dispItem.price.dispPrice}"></td>-->
-    <!--<td ></td>-->
-    <!--<td th:text="${dispItem.item.notes.isEmpty()} ? 'N' : 'Y'"></td>-->
-    <!--</tr>-->
 
 </table>
 

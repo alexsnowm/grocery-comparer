@@ -13,15 +13,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 
 @Controller
 @RequestMapping(value = "items")
@@ -44,41 +40,45 @@ public class ItemController {
 
         Iterable<Item> allItems = itemDao.findAll();
 
-        int itemCount = (int) itemDao.count();
-        Price[] bestPrices = new Price[itemCount];
-        int i = 0;
+        List<DisplayItemObj> dispItems = new ArrayList<>();
+        DisplayItemObj iObj;
         for (Item item : allItems) {
             int matchPriceId = item.getPriceId();
 
             if (matchPriceId == 0) {
-                bestPrices[i] = new Price(new Store());
-                i++;
+                iObj = new DisplayItemObj(item, new Price());
+                dispItems.add(iObj);
             } else {
-                bestPrices[i] = priceDao.findOne(matchPriceId);
-                i++;
+                Price matchPrice = priceDao.findOne(matchPriceId);
+                iObj = new DisplayItemObj(item, matchPrice);
+                dispItems.add(iObj);
             }
         }
 
-//        List<DisplayItemObj> dispItems = new ArrayList<>();
-//        for (Item item : allItems) {
-//            int matchPriceId = item.getPriceId();
-//
-//            if (matchPriceId == 0) {
-//                DisplayItemObj iObj = new DisplayItemObj(item, new Price());
-//                dispItems.add(iObj);
-//            } else {
-//                Price matchPrice = priceDao.findOne(matchPriceId);
-//                DisplayItemObj iObj = new DisplayItemObj(item, matchPrice);
-//                dispItems.add(iObj);
-//            }
-//        }
-
         model.addAttribute("title", "All Items");
-//        model.addAttribute("dispItems", dispItems);
-        model.addAttribute("dispItems", allItems);
-        model.addAttribute("bestPrices", bestPrices);
+        model.addAttribute("dispItems", dispItems);
 
         return "item/index";
+    }
+
+    @RequestMapping(value = "view/{id}", method = RequestMethod.GET)
+    public String viewMenu(@PathVariable int id, Model model) {
+
+        Item item = itemDao.findOne(id);
+
+        int matchPriceId = item.getPriceId();
+        DisplayItemObj iObj;
+        if (matchPriceId == 0) {
+            iObj = new DisplayItemObj(item, new Price(new Store()));
+        } else {
+            Price matchPrice = priceDao.findOne(matchPriceId);
+            iObj = new DisplayItemObj(item, matchPrice);
+        }
+
+        model.addAttribute("title", item.getName());
+        model.addAttribute("dispItem", iObj);
+
+        return "item/view";
     }
 
     @RequestMapping(value = "create", method = RequestMethod.GET)

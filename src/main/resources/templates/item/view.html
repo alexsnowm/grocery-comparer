@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org/">
+<head th:replace="fragments :: head">
+</head>
+<body class="container">
+
+<nav th:replace="fragments :: navigation"></nav>
+<h1 th:text="${title}"></h1>
+
+<table class="table">
+
+    <tr>
+        <td>Current Best Price:</td>
+        <td th:text="${dispItem.price.dispPrice}"></td>
+    </tr>
+    <tr>
+        <td>From:</td>
+        <td>
+            <div><a th:text="${dispItem.price.store.name}" th:href="@{/stores}"></a></div>
+            <div th:text="${dispItem.price.store.address}"></div>
+            <div th:text="${dispItem.price.store.tel}"></div>
+            <div><a th:text="${dispItem.price.store.website}" th:href="${dispItem.price.store.website}"></a></div>
+        </td>
+    </tr>
+    <tr>
+        <td>Aisle:</td>
+        <td th:text="${dispItem.price.aisle}"></td>
+    </tr>
+    <tr>
+        <td>Notes:</td>
+        <td th:text="${dispItem.item.notes}"></td>
+    </tr>
+
+</table>
+
+<h3>Price History</h3>
+<table>
+
+</table>
+
+</body>
+</html>
