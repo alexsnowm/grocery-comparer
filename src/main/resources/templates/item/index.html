@@ -21,6 +21,7 @@
         <td th:text="${dispItem.price.dispPrice}"></td>
         <td ></td>
         <td th:text="${dispItem.item.notes.isEmpty()} ? 'N' : 'Y'"></td>
+        <td><a th:href="'/items/edit/' + ${dispItem.item.id}">Update</a></td>
     </tr>
 
 </table>

@@ -8,6 +8,7 @@ import com.alexsnowm.grocerycomparer.models.data.ItemDao;
 import com.alexsnowm.grocerycomparer.models.data.ItemMeasureDao;
 import com.alexsnowm.grocerycomparer.models.data.PriceDao;
 import com.alexsnowm.grocerycomparer.models.data.StoreDao;
+import com.alexsnowm.grocerycomparer.models.forms.CreateItemForm;
 import com.alexsnowm.grocerycomparer.models.forms.DisplayItemObj;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,6 +17,7 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -86,26 +88,33 @@ public class ItemController {
     @RequestMapping(value = "create", method = RequestMethod.GET)
     public String displayCreateItemForm(Model model) {
         model.addAttribute("title", "Create Item");
-        model.addAttribute("item", new Item());
-        model.addAttribute("price", new Price());
-        model.addAttribute("measures", itemMeasureDao.findAll());
+        model.addAttribute(new CreateItemForm());
+        model.addAttribute("itemMeasures", itemMeasureDao.findAll());
         model.addAttribute("stores", storeDao.findAll());
 
         return "item/create";
     }
 
     @RequestMapping(value = "create", method = RequestMethod.POST)
-    public String processCreateItemForm(@ModelAttribute @Valid Item newItem, @ModelAttribute @Valid Price newPrice, Errors errors, @RequestParam int measureId, @RequestParam int storeId, Model model) {
+    public String processCreateItemForm(@ModelAttribute @Valid CreateItemForm theForm, Errors errors, @RequestParam int measureId, @RequestParam int storeId, Model model) {
 
         if (errors.hasErrors()) {
             model.addAttribute("title", "Create Item");
-            model.addAttribute("measures", itemMeasureDao.findAll());
+            model.addAttribute("itemMeasures", itemMeasureDao.findAll());
             model.addAttribute("stores", storeDao.findAll());
 
             return "item/create";
         }
 
-        if (newPrice.getNumber() != null) {
+        Item newItem = new Item();
+        newItem.setName(theForm.getItemName());
+        newItem.setNotes(theForm.getItemNotes());
+
+        BigDecimal priceNum = theForm.getPriceNumber();
+        if (priceNum != null) {
+            Price newPrice = new Price();
+            newPrice.setNumber(priceNum);
+            newPrice.setAisle(theForm.getPriceAisle());
             ItemMeasure im = itemMeasureDao.findOne(measureId);
             newPrice.setMeasure(im);
             Store st = storeDao.findOne(storeId);

@@ -4,7 +4,6 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
-import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -17,7 +16,6 @@ public class Price {
     @GeneratedValue
     private int id;
 
-    @Digits(integer = 7, fraction = 2, message = "Enter number to no more than 2 decimal places")
     private BigDecimal number;
 
     @ManyToOne

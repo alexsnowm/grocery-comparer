@@ -1,7 +1,5 @@
 package com.alexsnowm.grocerycomparer.models;
 
-import org.hibernate.validator.constraints.NotBlank;
-
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,9 +11,7 @@ public class Item {
     @GeneratedValue
     private int id;
 
-    @NotBlank(message = "Name required")
     private String name;
-
     private int priceId;
     private String notes;
 
