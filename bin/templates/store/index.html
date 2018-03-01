@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org/">
+<head th:replace="fragments :: head">
+</head>
+<body class="container">
+
+<nav th:replace="fragments :: navigation"></nav>
+<h1 th:text="${title}"></h1>
+
+<table class="table">
+
+    <tr>
+        <th>Store</th>
+        <th>Address</th>
+        <th>Phone</th>
+        <th>Notes</th>
+    </tr>
+
+    <tr th:each="store : ${stores}">
+        <td><a th:text="${store.name}" th:href="@{/}"></a></td>
+        <td th:text="${store.address}"></td>
+        <td th:text="${store.tel}"></td>
+        <td th:text="${store.notes.isEmpty()} ? 'N' : 'Y'"></td>
+    </tr>
+
+</table>
+
+</body>
+</html>

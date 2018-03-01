@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org/">
+<head th:fragment="head">
+    <!-- Bootstrap stylesheets and script -->
+    <link th:href="@{/css/bootstrap.css}" rel="stylesheet" />
+    <link th:href="@{/css/grocery-comparer.css}" rel="stylesheet" />
+    <script type="text/javascript" th:src="@{/js/bootstrap.js}"></script>
+
+    <title th:text="${title}">Title</title>
+</head>
+<body>
+
+<nav th:fragment="navigation">
+    <a href="/items/create">New Item</a> |
+    <a href="/stores/create">New Store</a> |
+    <a href="/items">All Items</a> |
+    <a href="/stores">All Stores</a> |
+    <a href="/">Shopping Lists</a>
+
+    <!--<div id="navbar-account">-->
+        <!--|-->
+        <!--<a href="/">Manage Account</a>-->
+    <!--</div>-->
+</nav>
+
+</body>
+</html>
