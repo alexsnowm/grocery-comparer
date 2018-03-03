@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org/">
+<head th:replace="fragments :: head">
+</head>
+<body class="container">
+
+<nav th:replace="fragments :: navigation"></nav>
+<h1 th:text="${title}"></h1>
+
+<form method="post" style="max-width:600px;" th:object="${updateItemForm}">
+    <div class="form-group">
+        <label th:for="itemName">Item Name:</label>
+        <input class="form-control" th:field="*{itemName}" th:value="*{itemName}" />
+    </div>
+    <div class="form-group">
+        <label th:for="priceNumber">Add New Price (i.e., 10.00):</label>
+        $<input class="form-control" th:field="*{priceNumber}" /> /
+        <select name="measureId">
+            <option th:each="measure : ${itemMeasures}"
+                    th:text="${measure.measure}"
+                    th:value="${measure.id}"></option>
+        </select>
+        <span th:errors="*{priceNumber}" class="error"></span>
+    </div>
+    <div class="form-group">
+        <label th:for="store">Offering Store:</label>
+        <select name="storeId">
+            <option th:each="store : ${stores}"
+                    th:text="|${store.name} - ${store.address}|"
+                    th:value="${store.id}"></option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label th:for="priceAisle">Aisle:</label>
+        <input class="form-control" th:field="*{priceAisle}" />
+    </div>
+    <!--<div class="form-group">-->
+        <!--<label th:for="">Displayed Unit of Measure:</label>-->
+    <!--</div>-->
+    <div class="form-group">
+        <label th:for="itemNotes">Notes:</label>
+        <input class="form-control" th:field="*{itemNotes}" th:value="*{itemNotes}" />
+    </div>
+
+    <input type="submit" value="Update Item" />
+</form>
+
+</body>
+</html>

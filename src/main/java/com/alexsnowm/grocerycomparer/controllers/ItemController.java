@@ -10,6 +10,7 @@ import com.alexsnowm.grocerycomparer.models.data.PriceDao;
 import com.alexsnowm.grocerycomparer.models.data.StoreDao;
 import com.alexsnowm.grocerycomparer.models.forms.CreateItemForm;
 import com.alexsnowm.grocerycomparer.models.forms.DisplayItemObj;
+import com.alexsnowm.grocerycomparer.models.forms.UpdateItemForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -136,5 +137,34 @@ public class ItemController {
         itemDao.save(newItem);
 
         return "redirect:";
+    }
+
+    @RequestMapping(value = "update/{id}", method = RequestMethod.GET)
+    public String displayUpdateItemForm(@PathVariable int id, Model model) {
+
+        Item item = itemDao.findOne(id);
+
+        model.addAttribute("title", "Update " + item.getName());
+        model.addAttribute(new UpdateItemForm(item.getName(), item.getNotes()));
+        model.addAttribute("itemMeasures", itemMeasureDao.findAll());
+        model.addAttribute("stores", storeDao.findAll());
+
+        return "item/update";
+    }
+
+    @RequestMapping(value = "update/{id}", method = RequestMethod.POST)
+    public String processUpdateItemForm(@PathVariable int id, @ModelAttribute @Valid UpdateItemForm theForm, Errors errors, @RequestParam int measureId, @RequestParam int storeId, Model model) {
+
+        Item item = itemDao.findOne(id);
+
+        if (errors.hasErrors()) {
+            model.addAttribute("title", "Update " + item.getName());
+            model.addAttribute("itemMeasures", itemMeasureDao.findAll());
+            model.addAttribute("stores", storeDao.findAll());
+
+            return "item/update";
+        }
+
+        return "redirect:/items/view/" + id;
     }
 }
