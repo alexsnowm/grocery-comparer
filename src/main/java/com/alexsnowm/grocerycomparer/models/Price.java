@@ -17,8 +17,6 @@ public class Price {
     private int id;
 
     private BigDecimal number;
-
-    @ManyToOne
     private ItemMeasure measure;
 
     @ManyToOne

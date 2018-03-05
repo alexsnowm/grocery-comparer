@@ -1,48 +1,31 @@
 package com.alexsnowm.grocerycomparer.models;
 
-import org.hibernate.validator.constraints.NotBlank;
+public enum ItemMeasure {
 
-import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+    ITEM ("item"),
+    PIECE ("piece"),
+    LB ("lb"),
+    OZ ("oz"),
+    KG ("kg"),
+    G ("g"),
+    MG ("mg"),
+    GAL ("gal"),
+    QT ("qt"),
+    PT ("pt"),
+    FL_OZ ("fl oz"),
+    ML ("mL"),
+    L ("L"),
+    CUP ("cup"),
+    TBSP ("tbsp"),
+    TSP ("tsp");
 
-@Entity
-public class ItemMeasure {
+    private final String name;
 
-    @Id
-    @GeneratedValue
-    private int id;
-
-    @NotBlank
-    private String measure;
-
-    @OneToMany
-    @JoinColumn(name = "measure_id")
-    private List<Price> prices = new ArrayList<>();
-
-    public ItemMeasure() {}
-
-    public ItemMeasure(String measure) {
-        this.measure = measure;
+    ItemMeasure(String name) {
+        this.name = name;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public String getMeasure() {
-        return measure;
-    }
-
-    public void setMeasure(String measure) {
-        this.measure = measure;
-    }
-
-    public List<Price> getPrices() {
-        return prices;
-    }
-
-    public void addPrice(Price price) {
-        prices.add(price);
+    public String getName() {
+        return name;
     }
 }

@@ -5,7 +5,6 @@ import com.alexsnowm.grocerycomparer.models.ItemMeasure;
 import com.alexsnowm.grocerycomparer.models.Price;
 import com.alexsnowm.grocerycomparer.models.Store;
 import com.alexsnowm.grocerycomparer.models.data.ItemDao;
-import com.alexsnowm.grocerycomparer.models.data.ItemMeasureDao;
 import com.alexsnowm.grocerycomparer.models.data.PriceDao;
 import com.alexsnowm.grocerycomparer.models.data.StoreDao;
 import com.alexsnowm.grocerycomparer.models.forms.CreateItemForm;
@@ -35,9 +34,6 @@ public class ItemController {
     @Autowired
     private PriceDao priceDao;
 
-    @Autowired
-    private ItemMeasureDao itemMeasureDao;
-
     @RequestMapping(value = "")
     public String index(Model model) {
 
@@ -49,7 +45,7 @@ public class ItemController {
             int matchPriceId = item.getPriceId();
 
             if (matchPriceId == 0) {
-                iObj = new DisplayItemObj(item, new Price());
+                iObj = new DisplayItemObj(item, new Price(new Store()));
                 dispItems.add(iObj);
             } else {
                 Price matchPrice = priceDao.findOne(matchPriceId);
@@ -90,18 +86,18 @@ public class ItemController {
     public String displayCreateItemForm(Model model) {
         model.addAttribute("title", "Create Item");
         model.addAttribute(new CreateItemForm());
-        model.addAttribute("itemMeasures", itemMeasureDao.findAll());
+        model.addAttribute("itemMeasures", ItemMeasure.values());
         model.addAttribute("stores", storeDao.findAll());
 
         return "item/create";
     }
 
     @RequestMapping(value = "create", method = RequestMethod.POST)
-    public String processCreateItemForm(@ModelAttribute @Valid CreateItemForm theForm, Errors errors, @RequestParam int measureId, @RequestParam int storeId, Model model) {
+    public String processCreateItemForm(@ModelAttribute @Valid CreateItemForm theForm, Errors errors, @RequestParam int storeId, Model model) {
 
         if (errors.hasErrors()) {
             model.addAttribute("title", "Create Item");
-            model.addAttribute("itemMeasures", itemMeasureDao.findAll());
+            model.addAttribute("itemMeasures", ItemMeasure.values());
             model.addAttribute("stores", storeDao.findAll());
 
             return "item/create";
@@ -116,8 +112,7 @@ public class ItemController {
             Price newPrice = new Price();
             newPrice.setNumber(priceNum);
             newPrice.setAisle(theForm.getPriceAisle());
-            ItemMeasure im = itemMeasureDao.findOne(measureId);
-            newPrice.setMeasure(im);
+            newPrice.setMeasure(theForm.getMeasure());
             Store st = storeDao.findOne(storeId);
             newPrice.setStore(st);
 
@@ -126,7 +121,7 @@ public class ItemController {
             newItem = itemDao.findOne(newItem.getId());
             newPrice.setItem(newItem);
 
-            String dp = "$" + newPrice.getNumber() + " / " + newPrice.getMeasure().getMeasure();
+            String dp = "$" + newPrice.getNumber() + " / " + newPrice.getMeasure().getName();
             newPrice.setDispPrice(dp);
 
             priceDao.save(newPrice);
@@ -146,24 +141,49 @@ public class ItemController {
 
         model.addAttribute("title", "Update " + item.getName());
         model.addAttribute(new UpdateItemForm(item.getName(), item.getNotes()));
-        model.addAttribute("itemMeasures", itemMeasureDao.findAll());
+        model.addAttribute("itemMeasures", ItemMeasure.values());
         model.addAttribute("stores", storeDao.findAll());
 
         return "item/update";
     }
 
     @RequestMapping(value = "update/{id}", method = RequestMethod.POST)
-    public String processUpdateItemForm(@PathVariable int id, @ModelAttribute @Valid UpdateItemForm theForm, Errors errors, @RequestParam int measureId, @RequestParam int storeId, Model model) {
+    public String processUpdateItemForm(@PathVariable int id, @ModelAttribute @Valid UpdateItemForm theForm, Errors errors, @RequestParam int storeId, Model model) {
 
         Item item = itemDao.findOne(id);
 
         if (errors.hasErrors()) {
             model.addAttribute("title", "Update " + item.getName());
-            model.addAttribute("itemMeasures", itemMeasureDao.findAll());
+            model.addAttribute("itemMeasures", ItemMeasure.values());
             model.addAttribute("stores", storeDao.findAll());
 
             return "item/update";
         }
+
+        item.setName(theForm.getItemName());
+        item.setNotes(theForm.getItemNotes());
+
+        BigDecimal priceNum = theForm.getPriceNumber();
+        if (priceNum != null) {
+            Price newPrice = new Price();
+            newPrice.setNumber(priceNum);
+            newPrice.setAisle(theForm.getPriceAisle());
+            newPrice.setMeasure(theForm.getMeasure());
+            Store st = storeDao.findOne(storeId);
+            newPrice.setStore(st);
+            newPrice.setItem(item);
+
+//            case of if no price yet existing for selected item
+
+            String dp = "$" + newPrice.getNumber() + " / " + newPrice.getMeasure().getName();
+            newPrice.setDispPrice(dp);
+
+            priceDao.save(newPrice);
+
+//            item.setPriceId(newPrice.getId());
+        }
+
+        itemDao.save(item);
 
         return "redirect:/items/view/" + id;
     }

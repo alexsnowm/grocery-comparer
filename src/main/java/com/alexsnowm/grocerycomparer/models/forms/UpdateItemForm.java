@@ -1,5 +1,7 @@
 package com.alexsnowm.grocerycomparer.models.forms;
 
+import com.alexsnowm.grocerycomparer.models.ItemMeasure;
+
 import javax.validation.constraints.Digits;
 import java.math.BigDecimal;
 
@@ -10,6 +12,7 @@ public class UpdateItemForm {
     @Digits(integer = 7, fraction = 2, message = "Enter number to no more than 2 decimal places")
     private BigDecimal priceNumber;
 
+    private ItemMeasure measure;
     private String priceAisle;
     private String itemNotes;
 
@@ -35,6 +38,14 @@ public class UpdateItemForm {
 
     public void setPriceNumber(BigDecimal priceNumber) {
         this.priceNumber = priceNumber;
+    }
+
+    public ItemMeasure getMeasure() {
+        return measure;
+    }
+
+    public void setMeasure(ItemMeasure measure) {
+        this.measure = measure;
     }
 
     public String getPriceAisle() {
