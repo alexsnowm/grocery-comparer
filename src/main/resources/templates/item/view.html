@@ -10,7 +10,7 @@
 <table class="table">
     <tr>
         <td>Current Best Price:</td>
-        <td th:text="${dispItem.price.dispPrice}"></td>
+        <td th:text="${dispItem.price.dispConvPrice}"></td>
     </tr>
     <tr>
         <td>From:</td>
@@ -36,13 +36,15 @@
 
     <tr>
         <th>Date Added</th>
-        <th>Price</th>
+        <th>Converted Price</th>
+        <th>Entered Price</th>
         <th>From</th>
     </tr>
 
     <tr th:each="price : ${priceList}">
         <td th:text="${price.postedAt}"></td>
-        <td th:text="${price.dispPrice}"></td>
+        <td th:text="${price.dispConvPrice}"></td>
+        <td th:text="${price.dispOrigPrice}"></td>
         <td>
             <div><a th:text="${price.store.name}" th:href="@{/stores}"></a></div>
             <div th:text="${price.store.address}"></div>

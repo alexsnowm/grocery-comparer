@@ -18,7 +18,7 @@
 
     <tr th:each="dispItem : ${dispItems}">
         <td><a th:text="${dispItem.item.name}" th:href="'/items/view/' + ${dispItem.item.id}"></a></td>
-        <td th:text="${dispItem.price.dispPrice}"></td>
+        <td th:text="${dispItem.price.dispConvPrice}"></td>
         <td th:text="${dispItem.price.store.name}"></td>
         <td th:text="${dispItem.item.notes.isEmpty()} ? 'N' : 'Y'"></td>
         <td><a th:href="'/items/update/' + ${dispItem.item.id}">Update</a></td>

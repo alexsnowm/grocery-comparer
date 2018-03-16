@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -110,9 +111,10 @@ public class ItemController {
         BigDecimal priceNum = theForm.getPriceNumber();
         if (priceNum != null) {
             Price newPrice = new Price();
-            newPrice.setNumber(priceNum);
+            newPrice.setOrigNum(priceNum);
+            newPrice.setConvNum(priceNum);
             newPrice.setAisle(theForm.getPriceAisle());
-            newPrice.setMeasure(theForm.getMeasure());
+            newPrice.setCurrMeasure(theForm.getMeasure());
             Store st = storeDao.findOne(storeId);
             newPrice.setStore(st);
 
@@ -121,11 +123,11 @@ public class ItemController {
             newItem = itemDao.findOne(newItem.getId());
             newPrice.setItem(newItem);
 
-            String dp = "$" + newPrice.getNumber() + " / " + newPrice.getMeasure().getName();
-            newPrice.setDispPrice(dp);
+            String dp = "$" + newPrice.getOrigNum() + " / " + newPrice.getCurrMeasure().getName();
+            newPrice.setDispOrigPrice(dp);
+            newPrice.setDispConvPrice(dp);
 
             priceDao.save(newPrice);
-
             newItem.setPriceId(newPrice.getId());
         }
 
@@ -165,20 +167,60 @@ public class ItemController {
 
         BigDecimal priceNum = theForm.getPriceNumber();
         if (priceNum != null) {
+
+            int itemBestPrice = item.getPriceId();
+            ItemMeasure formMeasure = theForm.getMeasure();
+            String priceAisle = theForm.getPriceAisle();
+
+            if (itemBestPrice == 0) {
+                Price newPrice = new Price();
+                newPrice.setOrigNum(priceNum);
+                newPrice.setConvNum(priceNum);
+                newPrice.setAisle(priceAisle);
+                newPrice.setCurrMeasure(formMeasure);
+                Store st = storeDao.findOne(storeId);
+                newPrice.setStore(st);
+                newPrice.setItem(item);
+
+                String dp = "$" + newPrice.getOrigNum() + " / " + newPrice.getCurrMeasure().getName();
+                newPrice.setDispOrigPrice(dp);
+                newPrice.setDispConvPrice(dp);
+
+                priceDao.save(newPrice);
+                item.setPriceId(newPrice.getId());
+                itemDao.save(item);
+
+                return "redirect:/items/view/" + id;
+            }
+
+            if ( ! formMeasure.checkCompatible( priceDao.findOne(itemBestPrice).getCurrMeasure() ) ) {
+                model.addAttribute("title", "Update " + item.getName());
+//                TODO: error message for incompatible unit of measure
+                model.addAttribute("itemMeasures", ItemMeasure.values());
+                model.addAttribute("stores", storeDao.findAll());
+
+                return "item/update";
+            }
+
             Price newPrice = new Price();
-            newPrice.setNumber(priceNum);
-            newPrice.setAisle(theForm.getPriceAisle());
-            newPrice.setMeasure(theForm.getMeasure());
+            newPrice.setOrigNum(priceNum);
+            newPrice.setConvNum(priceNum);
+            newPrice.setAisle(priceAisle);
+            newPrice.setCurrMeasure(formMeasure);
             Store st = storeDao.findOne(storeId);
             newPrice.setStore(st);
             newPrice.setItem(item);
 
-//            case of if no price yet existing for selected item
+            String op = "$" + newPrice.getOrigNum().setScale(2).toPlainString() + " / " + newPrice.getCurrMeasure().getName();
+            newPrice.setDispOrigPrice(op);
 
-            String dp = "$" + newPrice.getNumber() + " / " + newPrice.getMeasure().getName();
-            newPrice.setDispPrice(dp);
+            newPrice.convertMeasure(priceDao.findOne(itemBestPrice).getCurrMeasure());
+            String cp = "$" + newPrice.getConvNum().setScale(2, RoundingMode.CEILING).toPlainString() + " / " + newPrice.getCurrMeasure().getName();
+            newPrice.setDispConvPrice(cp);
 
             priceDao.save(newPrice);
+
+//            TODO: sort the lowest price from the item's list of prices and assign the low price as the item's current best price
 
 //            item.setPriceId(newPrice.getId());
         }
