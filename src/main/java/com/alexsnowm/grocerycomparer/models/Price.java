@@ -18,8 +18,8 @@ public class Price {
     @GeneratedValue
     private int id;
 
-    private BigDecimal origNum;
-    private BigDecimal convNum;
+    private double origNum;
+    private double convNum;
     private ItemMeasure currMeasure;
 
     @ManyToOne
@@ -40,7 +40,7 @@ public class Price {
 
     public Price() {}
 
-    public Price(BigDecimal number, String aisle, String dispPrice) {
+    public Price(double number, String aisle, String dispPrice) {
         this.origNum = number;
         this.aisle = aisle;
         this.dispOrigPrice = dispOrigPrice;
@@ -54,19 +54,19 @@ public class Price {
         return id;
     }
 
-    public BigDecimal getOrigNum() {
+    public double getOrigNum() {
         return origNum;
     }
 
-    public void setOrigNum(BigDecimal origNum) {
+    public void setOrigNum(double origNum) {
         this.origNum = origNum;
     }
 
-    public BigDecimal getConvNum() {
+    public double getConvNum() {
         return convNum;
     }
 
-    public void setConvNum(BigDecimal convNum) {
+    public void setConvNum(double convNum) {
         this.convNum = convNum;
     }
 
@@ -136,144 +136,142 @@ public class Price {
 
     public void convertMeasure(ItemMeasure toMeasure) {
 
-        MathContext precision = new MathContext(12, RoundingMode.FLOOR);
-
         if (toMeasure.equals(ItemMeasure.G)) {
-            toG(precision);
+            toG();
         } else if (toMeasure.equals(ItemMeasure.LB)) {
-            toLB(precision);
+            toLB();
         } else if (toMeasure.equals(ItemMeasure.OZ)) {
-            toOZ(precision);
+            toOZ();
         } else if (toMeasure.equals(ItemMeasure.KG)) {
-            toKG(precision);
+            toKG();
         } else if (toMeasure.equals(ItemMeasure.MG)) {
-            toMG(precision);
+            toMG();
         }
 
         else if (toMeasure.equals(ItemMeasure.ML)) {
-            toML(precision);
+            toML();
         } else if (toMeasure.equals(ItemMeasure.FL_OZ)) {
-            toFL_OZ(precision);
+            toFL_OZ();
         } else if (toMeasure.equals(ItemMeasure.L)) {
-            toL(precision);
+            toL();
         } else if (toMeasure.equals(ItemMeasure.GAL)) {
-            toGAL(precision);
+            toGAL();
         } else if (toMeasure.equals(ItemMeasure.QT)) {
-            toQT(precision);
+            toQT();
         } else if (toMeasure.equals(ItemMeasure.PT)) {
-            toPT(precision);
+            toPT();
         } else if (toMeasure.equals(ItemMeasure.CUP)) {
-            toCUP(precision);
+            toCUP();
         } else if (toMeasure.equals(ItemMeasure.TBSP)) {
-            toTBSP(precision);
+            toTBSP();
         } else if (toMeasure.equals(ItemMeasure.TSP)) {
-            toTSP(precision);
+            toTSP();
         }
     }
 
-    public void toG(MathContext precision) {
+    public void toG() {
         if (currMeasure.equals(ItemMeasure.LB)) {
-            this.convNum = convNum.divide(new BigDecimal("453.59237"), precision);
+            this.convNum = convNum / 453.59237;
         } else if (currMeasure.equals(ItemMeasure.OZ)) {
-            this.convNum = convNum.divide(new BigDecimal("28.349523125"), precision);
+            this.convNum = convNum / 28.349523125;
         } else if (currMeasure.equals(ItemMeasure.KG)) {
-            this.convNum = convNum.divide(new BigDecimal("1000"), precision);
+            this.convNum = convNum / 1000;
         } else if (currMeasure.equals(ItemMeasure.MG)) {
-            this.convNum = convNum.multiply(new BigDecimal("1000"));
+            this.convNum = convNum * 1000;
         }
         setCurrMeasure(ItemMeasure.G);
     }
 
-    public void toLB(MathContext precision) {
-        toG(precision);
-        this.convNum = convNum.multiply(new BigDecimal("453.59237"));
+    public void toLB() {
+        toG();
+        this.convNum = convNum * 453.59237;
         setCurrMeasure(ItemMeasure.LB);
     }
 
-    public void toOZ(MathContext precision) {
-        toG(precision);
-        this.convNum = convNum.multiply(new BigDecimal("28.349523125"));
+    public void toOZ() {
+        toG();
+        this.convNum = convNum * 28.349523125;
         setCurrMeasure(ItemMeasure.OZ);
     }
 
-    public void toKG(MathContext precision) {
-        toG(precision);
-        this.convNum = convNum.multiply(new BigDecimal("1000"));
+    public void toKG() {
+        toG();
+        this.convNum = convNum * 1000;
         setCurrMeasure(ItemMeasure.KG);
     }
 
-    public void toMG(MathContext precision) {
-        toG(precision);
-        this.convNum = convNum.divide(new BigDecimal("1000"), precision);
+    public void toMG() {
+        toG();
+        this.convNum = convNum / 1000;
         setCurrMeasure(ItemMeasure.KG);
     }
 
-    public void toML(MathContext precision) {
+    public void toML() {
         if (currMeasure.equals(ItemMeasure.FL_OZ)) {
-            this.convNum = convNum.divide(new BigDecimal("29.5735295625"), precision);
+            this.convNum = convNum / 29.5735295625;
         } else if (currMeasure.equals(ItemMeasure.L)) {
-            this.convNum = convNum.divide(new BigDecimal("1000"), precision);
+            this.convNum = convNum / 1000;
         } else if (currMeasure.equals(ItemMeasure.GAL)) {
-            this.convNum = convNum.divide(new BigDecimal("3785.411784"), precision);
+            this.convNum = convNum / 3785.411784;
         } else if (currMeasure.equals(ItemMeasure.QT)) {
-            this.convNum = convNum.multiply(new BigDecimal("946.352946"), precision);
+            this.convNum = convNum / 946.352946;
         } else if (currMeasure.equals(ItemMeasure.PT)) {
-            this.convNum = convNum.divide(new BigDecimal("473.176473"), precision);
+            this.convNum = convNum / 473.176473;
         } else if (currMeasure.equals(ItemMeasure.CUP)) {
-            this.convNum = convNum.divide(new BigDecimal("236.5882365"), precision);
+            this.convNum = convNum / 236.5882365;
         } else if (currMeasure.equals(ItemMeasure.TBSP)) {
-            this.convNum = convNum.divide(new BigDecimal("14.78676478125"), precision);
+            this.convNum = convNum / 14.78676478125;
         } else if (currMeasure.equals(ItemMeasure.TSP)) {
-            this.convNum = convNum.divide(new BigDecimal("4.92892159375"), precision);
+            this.convNum = convNum / 4.92892159375;
         }
         setCurrMeasure(ItemMeasure.ML);
     }
 
-    public void toFL_OZ(MathContext precision) {
-        toML(precision);
-        this.convNum = convNum.multiply(new BigDecimal("29.5735295625"));
+    public void toFL_OZ() {
+        toML();
+        this.convNum = convNum * 29.5735295625;
         setCurrMeasure(ItemMeasure.FL_OZ);
     }
 
-    public void toL(MathContext precision) {
-        toML(precision);
-        this.convNum = convNum.multiply(new BigDecimal("1000"));
+    public void toL() {
+        toML();
+        this.convNum = convNum * 1000;
         setCurrMeasure(ItemMeasure.L);
     }
 
-    public void toGAL(MathContext precision) {
-        toML(precision);
-        this.convNum = convNum.multiply(new BigDecimal("3785.411784"));
+    public void toGAL() {
+        toML();
+        this.convNum = convNum * 3785.411784;
         setCurrMeasure(ItemMeasure.GAL);
     }
 
-    public void toQT(MathContext precision) {
-        toML(precision);
-        this.convNum = convNum.multiply(new BigDecimal("946.352946"));
+    public void toQT() {
+        toML();
+        this.convNum = convNum * 946.352946;
         setCurrMeasure(ItemMeasure.QT);
     }
 
-    public void toPT(MathContext precision) {
-        toML(precision);
-        this.convNum = convNum.multiply(new BigDecimal("473.176473"));
+    public void toPT() {
+        toML();
+        this.convNum = convNum * 473.176473;
         setCurrMeasure(ItemMeasure.PT);
     }
 
-    public void toCUP(MathContext precision) {
-        toML(precision);
-        this.convNum = convNum.multiply(new BigDecimal("236.5882365"));
+    public void toCUP() {
+        toML();
+        this.convNum = convNum * 236.5882365;
         setCurrMeasure(ItemMeasure.CUP);
     }
 
-    public void toTBSP(MathContext precision) {
-        toML(precision);
-        this.convNum = convNum.multiply(new BigDecimal("14.78676478125"));
+    public void toTBSP() {
+        toML();
+        this.convNum = convNum * 14.78676478125;
         setCurrMeasure(ItemMeasure.TBSP);
     }
 
-    public void toTSP(MathContext precision) {
-        toML(precision);
-        this.convNum = convNum.multiply(new BigDecimal("4.92892159375"));
+    public void toTSP() {
+        toML();
+        this.convNum = convNum * 4.92892159375;
         setCurrMeasure(ItemMeasure.TSP);
     }
 }

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.math.BigDecimal;
+import java.math.MathContext;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
@@ -108,7 +109,7 @@ public class ItemController {
         newItem.setName(theForm.getItemName());
         newItem.setNotes(theForm.getItemNotes());
 
-        BigDecimal priceNum = theForm.getPriceNumber();
+        Double priceNum = theForm.getPriceNumber();
         if (priceNum != null) {
             Price newPrice = new Price();
             newPrice.setOrigNum(priceNum);
@@ -123,7 +124,8 @@ public class ItemController {
             newItem = itemDao.findOne(newItem.getId());
             newPrice.setItem(newItem);
 
-            String dp = "$" + newPrice.getOrigNum() + " / " + newPrice.getCurrMeasure().getName();
+            BigDecimal dec_price = new BigDecimal(newPrice.getOrigNum());
+            String dp = "$" + dec_price.setScale(2, RoundingMode.CEILING).toPlainString() + " / " + newPrice.getCurrMeasure().getName();
             newPrice.setDispOrigPrice(dp);
             newPrice.setDispConvPrice(dp);
 
@@ -165,7 +167,7 @@ public class ItemController {
         item.setName(theForm.getItemName());
         item.setNotes(theForm.getItemNotes());
 
-        BigDecimal priceNum = theForm.getPriceNumber();
+        Double priceNum = theForm.getPriceNumber();
         if (priceNum != null) {
 
             int itemBestPrice = item.getPriceId();
@@ -182,7 +184,8 @@ public class ItemController {
                 newPrice.setStore(st);
                 newPrice.setItem(item);
 
-                String dp = "$" + newPrice.getOrigNum() + " / " + newPrice.getCurrMeasure().getName();
+                BigDecimal dec_price = new BigDecimal(newPrice.getOrigNum());
+                String dp = "$" + dec_price.setScale(2, RoundingMode.CEILING).toPlainString() + " / " + newPrice.getCurrMeasure().getName();
                 newPrice.setDispOrigPrice(dp);
                 newPrice.setDispConvPrice(dp);
 
@@ -211,11 +214,13 @@ public class ItemController {
             newPrice.setStore(st);
             newPrice.setItem(item);
 
-            String op = "$" + newPrice.getOrigNum().setScale(2).toPlainString() + " / " + newPrice.getCurrMeasure().getName();
+            BigDecimal dec_price = new BigDecimal(newPrice.getOrigNum());
+            String op = "$" + dec_price.setScale(2, RoundingMode.CEILING).toPlainString() + " / " + newPrice.getCurrMeasure().getName();
             newPrice.setDispOrigPrice(op);
 
             newPrice.convertMeasure(priceDao.findOne(itemBestPrice).getCurrMeasure());
-            String cp = "$" + newPrice.getConvNum().setScale(2, RoundingMode.CEILING).toPlainString() + " / " + newPrice.getCurrMeasure().getName();
+            dec_price = new BigDecimal(newPrice.getConvNum());
+            String cp = "$" + dec_price.setScale(2, RoundingMode.CEILING).toPlainString() + " / " + newPrice.getCurrMeasure().getName();
             newPrice.setDispConvPrice(cp);
 
             priceDao.save(newPrice);

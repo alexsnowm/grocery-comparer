@@ -10,7 +10,7 @@ public class UpdateItemForm {
     private String itemName;
 
     @Digits(integer = 7, fraction = 2, message = "Enter number to no more than 2 decimal places")
-    private BigDecimal priceNumber;
+    private Double priceNumber;
 
     private ItemMeasure measure;
     private String priceAisle;
@@ -32,11 +32,11 @@ public class UpdateItemForm {
         this.itemName = itemName;
     }
 
-    public BigDecimal getPriceNumber() {
+    public Double getPriceNumber() {
         return priceNumber;
     }
 
-    public void setPriceNumber(BigDecimal priceNumber) {
+    public void setPriceNumber(Double priceNumber) {
         this.priceNumber = priceNumber;
     }
 
