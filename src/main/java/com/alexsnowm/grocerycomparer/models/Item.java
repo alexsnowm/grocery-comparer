@@ -17,6 +17,7 @@ public class Item {
 
     @OneToMany
     @JoinColumn(name = "item_id")
+    @OrderBy("postedAt DESC")
     private List<Price> prices = new ArrayList<>();
 
     public Item(String name, String notes) {

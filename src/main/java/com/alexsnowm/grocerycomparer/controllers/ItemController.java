@@ -21,7 +21,9 @@ import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping(value = "items")
@@ -214,6 +216,7 @@ public class ItemController {
             newPrice.setStore(st);
             newPrice.setItem(item);
 
+//            TODO: original value and converted value strings are being saved with incorrectly rounded values (2.99 is rendered as 3.00 in original and converted strings). Need to fix.
             BigDecimal dec_price = new BigDecimal(newPrice.getOrigNum());
             String op = "$" + dec_price.setScale(2, RoundingMode.CEILING).toPlainString() + " / " + newPrice.getCurrMeasure().getName();
             newPrice.setDispOrigPrice(op);
@@ -225,9 +228,25 @@ public class ItemController {
 
             priceDao.save(newPrice);
 
-//            TODO: sort the lowest price from the item's list of prices and assign the low price as the item's current best price
+            HashMap<Store, Price> storesCurrPrices = new HashMap<>();
+            List<Price> itemPriceList = item.getPrices();
+            for (Price price : itemPriceList) {
+                Store store = price.getStore();
+                if (! storesCurrPrices.containsKey(store)) {
+                    storesCurrPrices.put(store, price);
+                }
+            }
 
-//            item.setPriceId(newPrice.getId());
+            itemBestPrice = newPrice.getId();
+            double newBestPrice = newPrice.getConvNum();
+            for (Map.Entry<Store, Price> price : storesCurrPrices.entrySet()) {
+                double currPrice = price.getValue().getConvNum();
+                if (currPrice < newBestPrice) {
+                    newBestPrice = currPrice;
+                    itemBestPrice = price.getValue().getId();
+                }
+            }
+            item.setPriceId(itemBestPrice);
         }
 
         itemDao.save(item);
