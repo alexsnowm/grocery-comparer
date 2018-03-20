@@ -111,7 +111,7 @@ public class ItemController {
         newItem.setName(theForm.getItemName());
         newItem.setNotes(theForm.getItemNotes());
 
-        Double priceNum = theForm.getPriceNumber();
+        BigDecimal priceNum = theForm.getPriceNumber();
         if (priceNum != null) {
             Price newPrice = new Price();
             newPrice.setOrigNum(priceNum);
@@ -126,8 +126,7 @@ public class ItemController {
             newItem = itemDao.findOne(newItem.getId());
             newPrice.setItem(newItem);
 
-            BigDecimal dec_price = new BigDecimal(newPrice.getOrigNum());
-            String dp = "$" + dec_price.setScale(2, RoundingMode.CEILING).toPlainString() + " / " + newPrice.getCurrMeasure().getName();
+            String dp = "$" + newPrice.getOrigNum().setScale(2).toPlainString() + " / " + newPrice.getCurrMeasure().getName();
             newPrice.setDispOrigPrice(dp);
             newPrice.setDispConvPrice(dp);
 
@@ -169,7 +168,7 @@ public class ItemController {
         item.setName(theForm.getItemName());
         item.setNotes(theForm.getItemNotes());
 
-        Double priceNum = theForm.getPriceNumber();
+        BigDecimal priceNum = theForm.getPriceNumber();
         if (priceNum != null) {
 
             int itemBestPrice = item.getPriceId();
@@ -186,8 +185,7 @@ public class ItemController {
                 newPrice.setStore(st);
                 newPrice.setItem(item);
 
-                BigDecimal dec_price = new BigDecimal(newPrice.getOrigNum());
-                String dp = "$" + dec_price.setScale(2, RoundingMode.CEILING).toPlainString() + " / " + newPrice.getCurrMeasure().getName();
+                String dp = "$" + newPrice.getOrigNum().setScale(2).toPlainString() + " / " + newPrice.getCurrMeasure().getName();
                 newPrice.setDispOrigPrice(dp);
                 newPrice.setDispConvPrice(dp);
 
@@ -216,15 +214,17 @@ public class ItemController {
             newPrice.setStore(st);
             newPrice.setItem(item);
 
-//            TODO: original value and converted value strings are being saved with incorrectly rounded values (2.99 is rendered as 3.00 in original and converted strings). Need to fix.
-            BigDecimal dec_price = new BigDecimal(newPrice.getOrigNum());
-            String op = "$" + dec_price.setScale(2, RoundingMode.CEILING).toPlainString() + " / " + newPrice.getCurrMeasure().getName();
+            String op = "$" + newPrice.getOrigNum().setScale(2).toPlainString() + " / " + newPrice.getCurrMeasure().getName();
             newPrice.setDispOrigPrice(op);
 
             newPrice.convertMeasure(priceDao.findOne(itemBestPrice).getCurrMeasure());
-            dec_price = new BigDecimal(newPrice.getConvNum());
-            String cp = "$" + dec_price.setScale(2, RoundingMode.CEILING).toPlainString() + " / " + newPrice.getCurrMeasure().getName();
-            newPrice.setDispConvPrice(cp);
+            if (newPrice.getConvNum().compareTo(new BigDecimal("0")) == 0) {
+                String cp = "$" + newPrice.getConvNum().setScale(2).toPlainString() + " / " + newPrice.getCurrMeasure().getName();
+                newPrice.setDispConvPrice(cp);
+            } else {
+                String cp = "$" + newPrice.getConvNum().setScale(2, RoundingMode.CEILING).toPlainString() + " / " + newPrice.getCurrMeasure().getName();
+                newPrice.setDispConvPrice(cp);
+            }
 
             priceDao.save(newPrice);
 
@@ -238,10 +238,10 @@ public class ItemController {
             }
 
             itemBestPrice = newPrice.getId();
-            double newBestPrice = newPrice.getConvNum();
+            BigDecimal newBestPrice = newPrice.getConvNum();
             for (Map.Entry<Store, Price> price : storesCurrPrices.entrySet()) {
-                double currPrice = price.getValue().getConvNum();
-                if (currPrice < newBestPrice) {
+                BigDecimal currPrice = price.getValue().getConvNum();
+                if (currPrice.compareTo(newBestPrice) == -1) {
                     newBestPrice = currPrice;
                     itemBestPrice = price.getValue().getId();
                 }

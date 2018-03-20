@@ -11,8 +11,8 @@ public class CreateItemForm {
     @NotBlank(message = "Name required")
     private String itemName;
 
-    @Digits(integer = 7, fraction = 2, message = "Enter number to no more than 2 decimal places")
-    private Double priceNumber;
+    @Digits(integer = 6, fraction = 2, message = "Enter number to no more than 2 decimal places")
+    private BigDecimal priceNumber;
 
     private ItemMeasure measure;
     private String priceAisle;
@@ -29,11 +29,11 @@ public class CreateItemForm {
         this.itemName = itemName;
     }
 
-    public Double getPriceNumber() {
+    public BigDecimal getPriceNumber() {
         return priceNumber;
     }
 
-    public void setPriceNumber(Double priceNumber) {
+    public void setPriceNumber(BigDecimal priceNumber) {
         this.priceNumber = priceNumber;
     }
 
