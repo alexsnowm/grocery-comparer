@@ -9,6 +9,20 @@
 
 <table class="table">
     <tr>
+        <td>Item's Unit of Measure:</td>
+        <td>
+            <form method="post">
+                <select name="measure" onchange="this.form.submit()">
+                    <option th:each="measure : ${itemMeasures}"
+                            th:text="${measure.name}"
+                            th:value="${measure}"
+                            th:selected="${dispItem.price.getCurrMeasure() == measure}">
+                    </option>
+                </select>
+            </form>
+        </td>
+    </tr>
+    <tr>
         <td>Current Best Price:</td>
         <td th:text="${dispItem.price.dispConvPrice}"></td>
     </tr>
@@ -41,14 +55,20 @@
         <th>From</th>
     </tr>
 
-    <tr th:each="price : ${priceList}">
-        <td th:text="${price.postedAt}"></td>
-        <td th:text="${price.dispConvPrice}"></td>
-        <td th:text="${price.dispOrigPrice}"></td>
-        <td>
-            <div><a th:text="${price.store.name}" th:href="@{/stores}"></a></div>
-            <div th:text="${price.store.address}"></div>
-        </td>
+    <tr th:each="price : ${dispItem.priceList}">
+        <form method="post">
+            <td th:text="${price.postedAt}"></td>
+            <td th:text="${price.dispConvPrice}"></td>
+            <td th:text="${price.dispOrigPrice}"></td>
+            <td>
+                <div><a th:text="${price.store.name}" th:href="@{/stores}"></a></div>
+                <div th:text="${price.store.address}"></div>
+            </td>
+            <td>
+                <input type="hidden" name="priceId" th:value="${price.id}" />
+                <input type="submit" value="Remove" />
+            </td>
+        </form>
     </tr>
 
 </table>

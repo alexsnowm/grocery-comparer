@@ -65,10 +65,9 @@ public class ItemController {
     }
 
     @RequestMapping(value = "view/{id}", method = RequestMethod.GET)
-    public String viewMenu(@PathVariable int id, Model model) {
+    public String viewItem(@PathVariable int id, Model model) {
 
         Item item = itemDao.findOne(id);
-        List<Price> priceList = item.getPrices();
 
         int matchPriceId = item.getPriceId();
         DisplayItemObj iObj;
@@ -76,12 +75,85 @@ public class ItemController {
             iObj = new DisplayItemObj(item, new Price(new Store()));
         } else {
             Price matchPrice = priceDao.findOne(matchPriceId);
-            iObj = new DisplayItemObj(item, matchPrice);
+            iObj = new DisplayItemObj(item, matchPrice, item.getPrices());
         }
 
         model.addAttribute("title", item.getName());
         model.addAttribute("dispItem", iObj);
-        model.addAttribute("priceList", priceList);
+        model.addAttribute("itemMeasures", ItemMeasure.values());
+
+        return "item/view";
+    }
+
+    @RequestMapping(value = "view/{id}", method = RequestMethod.POST)
+    public String processViewItem(@PathVariable int id, @RequestParam(value = "measure", required = false) ItemMeasure measure, @ModelAttribute DisplayItemObj theForm, Model model) {
+
+        Item item = itemDao.findOne(id);
+
+//        TODO: error message for incompatible measure if selected
+
+        int matchPriceId = item.getPriceId();
+        DisplayItemObj iObj;
+        if (matchPriceId == 0) {
+            iObj = new DisplayItemObj(item, new Price(new Store()));
+        } else if (theForm.getPriceId() != 0) {
+            priceDao.delete(theForm.getPriceId());
+
+            List<Price> itemPriceList = item.getPrices();
+            if (itemPriceList.isEmpty()) {
+                item.setPriceId(0);
+                itemDao.save(item);
+                iObj = new DisplayItemObj(item, new Price(new Store()));
+            } else {
+                HashMap<Store, Price> storesCurrPrices = new HashMap<>();
+                for (Price price : itemPriceList) {
+                    Store store = price.getStore();
+                    if (! storesCurrPrices.containsKey(store)) {
+                        storesCurrPrices.put(store, price);
+                    }
+                }
+
+                Price mostRecentPrice = itemPriceList.get(0);
+                int itemBestPrice = mostRecentPrice.getId();
+                BigDecimal newBestPrice = mostRecentPrice.getConvNum();
+                for (Map.Entry<Store, Price> price : storesCurrPrices.entrySet()) {
+                    BigDecimal currPrice = price.getValue().getConvNum();
+                    if (currPrice.compareTo(newBestPrice) == -1) {
+                        newBestPrice = currPrice;
+                        itemBestPrice = price.getValue().getId();
+                    }
+                }
+                item.setPriceId(itemBestPrice);
+                itemDao.save(item);
+                Price matchPrice = priceDao.findOne(itemBestPrice);
+                iObj = new DisplayItemObj(item, matchPrice, itemPriceList);
+            }
+        } else {
+            Price matchPrice = priceDao.findOne(matchPriceId);
+            List<Price> itemPriceList = item.getPrices();
+
+            if (measure != null) {
+                if (matchPrice.getCurrMeasure().checkCompatible(measure)) {
+                    for (Price price : itemPriceList) {
+//                    TODO: error message if converted number is too large for the database, and that affected numbers will not be converted for this POST
+                        price.convertMeasure(measure);
+                        if (price.getConvNum().compareTo(new BigDecimal("0")) == 0) {
+                            String cp = "$" + price.getConvNum().setScale(2).toPlainString() + " / " + price.getCurrMeasure().getName();
+                            price.setDispConvPrice(cp);
+                        } else {
+                            String cp = "$" + price.getConvNum().setScale(2, RoundingMode.CEILING).toPlainString() + " / " + price.getCurrMeasure().getName();
+                            price.setDispConvPrice(cp);
+                        }
+                        priceDao.save(price);
+                    }
+                }
+            }
+            iObj = new DisplayItemObj(item, matchPrice, itemPriceList);
+        }
+
+        model.addAttribute("title", item.getName());
+        model.addAttribute("dispItem", iObj);
+        model.addAttribute("itemMeasures", ItemMeasure.values());
 
         return "item/view";
     }
