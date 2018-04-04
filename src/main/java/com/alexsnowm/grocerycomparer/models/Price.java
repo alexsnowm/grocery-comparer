@@ -1,14 +1,11 @@
 package com.alexsnowm.grocerycomparer.models;
 
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
-import java.math.MathContext;
 import java.math.RoundingMode;
 import java.util.Date;
 
@@ -41,7 +38,6 @@ public class Price {
     private String dispConvPrice;
 
     @ManyToOne
-    @OnDelete(action = OnDeleteAction.CASCADE)
     private Item item;
 
     public Price() {}

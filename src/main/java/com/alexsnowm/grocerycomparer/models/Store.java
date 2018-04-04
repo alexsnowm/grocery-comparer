@@ -28,8 +28,9 @@ public class Store {
     private String notes;
     private String address;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "store_id")
+    @OrderBy("postedAt DESC")
     private List<Price> prices = new ArrayList<>();
 
     public Store(String name, String street, String city, String zipcode, String tel, String website, String notes, String address) {

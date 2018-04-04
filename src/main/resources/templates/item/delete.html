@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org/">
+<head th:replace="fragments :: head">
+</head>
+<body class="container">
+
+<nav th:replace="fragments :: navigation"></nav>
+
+<form method="post" style="max-width:600px;">
+    <h3 th:text="${title}"></h3>
+    <div th:text="'Deleting &quot;' + ${itemObj.name} + '&quot; will also erase its Price History. Click &quot;Delete Item&quot; below if you wish to proceed.'"></div>
+
+    <input type="submit" value="Delete Item" />
+</form>
+
+</body>
+</html>

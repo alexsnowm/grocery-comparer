@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org/">
+<head th:replace="fragments :: head">
+</head>
+<body class="container">
+
+<nav th:replace="fragments :: navigation"></nav>
+
+<form method="post" style="max-width:600px;">
+    <h3 th:text="${title}"></h3>
+    <div th:text="'Deleting &quot;' + ${storeObj.name} +  ' - ' + ${storeObj.address} + '&quot; will also erase all prices offered by this store. Click &quot;Delete Store&quot; below if you wish to proceed.'"></div>
+
+    <input type="submit" value="Delete Store" />
+</form>
+
+</body>
+</html>

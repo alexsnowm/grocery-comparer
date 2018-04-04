@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org/">
+<head th:replace="fragments :: head">
+</head>
+<body class="container">
+
+<nav th:replace="fragments :: navigation"></nav>
+<h1 th:text="${title}"></h1>
+
+<table class="table">
+    <tr>
+        <td>Address:</td>
+        <td th:text="${store.address}"></td>
+    </tr>
+    <tr>
+        <td>Phone:</td>
+        <td th:text="${store.tel}"></td>
+    </tr>
+    <tr>
+        <td>Website:</td>
+        <td><a th:text="${store.website}" th:href="${store.website}"></a></td>
+    </tr>
+    <tr>
+        <td>Notes:</td>
+        <td th:text="${store.notes}"></td>
+    </tr>
+</table>
+
+<h3>Available Items</h3>
+<table class="table">
+
+    <tr>
+        <th>Item</th>
+        <th>Entered Price</th>
+        <th>Date Added</th>
+    </tr>
+
+    <tr th:each="price : ${priceList}">
+            <td><a th:text="${price.item.name}" th:href="'/items/view/' + ${price.item.id}"></a></td>
+            <td th:text="${price.dispOrigPrice}"></td>
+            <td th:text="${price.postedAt}"></td>
+    </tr>
+
+</table>
+
+</body>
+</html>

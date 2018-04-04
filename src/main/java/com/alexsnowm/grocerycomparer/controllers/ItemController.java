@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.math.BigDecimal;
-import java.math.MathContext;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,7 +37,7 @@ public class ItemController {
     @Autowired
     private PriceDao priceDao;
 
-    @RequestMapping(value = "")
+    @RequestMapping(value = "", method = RequestMethod.GET)
     public String index(Model model) {
 
         Iterable<Item> allItems = itemDao.findAll();
@@ -220,6 +219,7 @@ public class ItemController {
         model.addAttribute(new UpdateItemForm(item.getName(), item.getNotes()));
         model.addAttribute("itemMeasures", ItemMeasure.values());
         model.addAttribute("stores", storeDao.findAll());
+        model.addAttribute("itemObj", item);
 
         return "item/update";
     }
@@ -324,5 +324,24 @@ public class ItemController {
         itemDao.save(item);
 
         return "redirect:/items/view/" + id;
+    }
+
+    @RequestMapping(value = "update/{id}/delete", method = RequestMethod.GET)
+    public String displayRemoveItemConfirm(@PathVariable int id, Model model) {
+
+        Item item = itemDao.findOne(id);
+
+        model.addAttribute("title", "Confirm deletion of " + item.getName() + "?");
+        model.addAttribute("itemObj", item);
+
+        return "item/delete";
+    }
+
+    @RequestMapping(value = "update/{id}/delete", method = RequestMethod.POST)
+    public String processRemoveItemConfirm(@PathVariable int id) {
+
+        itemDao.delete(id);
+
+        return "redirect:/items";
     }
 }

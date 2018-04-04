@@ -17,10 +17,11 @@
     </tr>
 
     <tr th:each="store : ${stores}">
-        <td><a th:text="${store.name}" th:href="@{/}"></a></td>
+        <td><a th:text="${store.name}" th:href="'/stores/view/' + ${store.id}"></a></td>
         <td th:text="${store.address}"></td>
         <td th:text="${store.tel}"></td>
         <td th:text="${store.notes.isEmpty()} ? 'N' : 'Y'"></td>
+        <td><a th:href="'/stores/update/' + ${store.id}">Update</a></td>
     </tr>
 
 </table>

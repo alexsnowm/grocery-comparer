@@ -15,7 +15,7 @@ public class Item {
     private int priceId;
     private String notes;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "item_id")
     @OrderBy("postedAt DESC")
     private List<Price> prices = new ArrayList<>();

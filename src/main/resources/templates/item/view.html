@@ -29,7 +29,7 @@
     <tr>
         <td>From:</td>
         <td>
-            <div><a th:text="${dispItem.price.store.name}" th:href="@{/stores}"></a></div>
+            <div><a th:text="${dispItem.price.store.name}" th:href="'/stores/view/' + ${dispItem.price.store.id}"></a></div>
             <div th:text="${dispItem.price.store.address}"></div>
             <div th:text="${dispItem.price.store.tel}"></div>
             <div><a th:text="${dispItem.price.store.website}" th:href="${dispItem.price.store.website}"></a></div>
@@ -61,7 +61,7 @@
             <td th:text="${price.dispConvPrice}"></td>
             <td th:text="${price.dispOrigPrice}"></td>
             <td>
-                <div><a th:text="${price.store.name}" th:href="@{/stores}"></a></div>
+                <div><a th:text="${price.store.name}" th:href="'/stores/view/' + ${price.store.id}"></a></div>
                 <div th:text="${price.store.address}"></div>
             </td>
             <td>

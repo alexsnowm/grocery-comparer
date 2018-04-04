@@ -1,12 +1,14 @@
 package com.alexsnowm.grocerycomparer.models.forms;
 
 import com.alexsnowm.grocerycomparer.models.ItemMeasure;
+import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.Digits;
 import java.math.BigDecimal;
 
 public class UpdateItemForm {
 
+    @NotBlank(message = "Name required")
     private String itemName;
 
     @Digits(integer = 6, fraction = 2, message = "Enter number to no more than 2 decimal places")

@@ -10,47 +10,50 @@
 <form method="post" style="max-width:600px;" th:object="${store}">
     <div class="form-group">
         <label th:for="name">*Store Name:</label>
-        <input class="form-control" th:field="*{name}" />
+        <input class="form-control" th:field="*{name}" th:value="*{name}"/>
         <span th:errors="*{name}" class="error"></span>
     </div>
     <div class="form-group">
         <label th:for="street">Street:</label>
-        <input class="form-control" th:field="*{street}" />
+        <input class="form-control" th:field="*{street}" th:value="*{street}"/>
     </div>
     <div class="form-group">
         <label th:for="city">City:</label>
-        <input class="form-control" th:field="*{city}" />
+        <input class="form-control" th:field="*{city}" th:value="*{city}"/>
     </div>
     <div class="form-group">
         <label th:for="state">State:</label>
         <select name="stateId">
             <option th:each="state : ${states}"
                     th:text="${state.name}"
-                    th:value="${state.id}"></option>
+                    th:value="${state.id}"
+                    th:selected="${store.getState() == state}">
+            </option>
         </select>
     </div>
     <div class="form-group">
         <label th:for="zipcode">Postal Code:</label>
-        <input class="form-control" th:field="*{zipcode}" />
+        <input class="form-control" th:field="*{zipcode}" th:value="*{zipcode}"/>
     </div>
     <div class="form-group">
         <label th:for="tel">Phone:</label>
-        <input class="form-control" th:field="*{tel}" />
+        <input class="form-control" th:field="*{tel}" th:value="*{tel}"/>
     </div>
     <div class="form-group">
         <label th:for="website">Website:</label>
-        <input class="form-control" th:field="*{website}" />
+        <input class="form-control" th:field="*{website}" th:value="*{website}"/>
     </div>
     <div class="form-group">
         <label th:for="notes">Notes:</label>
-        <input class="form-control" th:field="*{notes}" />
+        <input class="form-control" th:field="*{notes}" th:value="*{notes}"/>
     </div>
 
     <div>
         *Required fields
     </div>
 
-    <input type="submit" value="Create Store" />
+    <input type="submit" value="Update Store" />
+    <span><a th:href="'/stores/update/' + ${store.id} + '/delete'">Delete Store</a></span>
 </form>
 
 </body>
